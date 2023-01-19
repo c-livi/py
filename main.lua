@@ -68,10 +68,12 @@ local function multiThreadGenerate(max_generations)
             coroutine.resume(corcont[i])
             local index = #ct + 1
             ct[#ct + 1] = corcont[i]
-            repeat
-                sleep(.01)
-            until completions["f" .. i] == true
-            coroutine.yield(ct[index])
+            coroutine.resume(coroutine.create(function() 
+                repeat
+                    sleep(.01)
+                until completions["f" .. i] == true
+                coroutine.yield(ct[index]) 
+            end)
         end
     end
 end
